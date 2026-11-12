@@ -24,7 +24,7 @@ jobs:
 
       # Built here rather than on `release: published`: releases created with GITHUB_TOKEN don't trigger other workflows.
       - if: steps.release.outputs.release_created
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - if: steps.release.outputs.release_created
         name: Build and attach the ZIPs
