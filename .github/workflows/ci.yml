@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Check Agent Plugins schemas
+        run: |
+          uvx check-jsonschema --schemafile https://agent-plugins.org/schemas/1.0.0/plugin.schema.json plugin.json
+          uvx check-jsonschema --schemafile https://agent-plugins.org/schemas/1.0.0/mcp.schema.json mcp.json
+
+      - name: Validate the Claude plugin
+        run: npx --yes @anthropic-ai/claude-code plugin validate .
+
+      - name: Build the ZIPs
+        run: python3 scripts/build.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plugin-zips
+          path: dist/*.zip

@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # Built here rather than on `release: published`: releases created with GITHUB_TOKEN don't trigger other workflows.
+      - if: steps.release.outputs.release_created
+        uses: actions/checkout@v4
+
+      - if: steps.release.outputs.release_created
+        name: Build and attach the ZIPs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/build.py
+          gh release upload "${{ steps.release.outputs.tag_name }}" dist/chatgpt.zip dist/claude.zip --clobber
