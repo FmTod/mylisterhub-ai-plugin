@@ -1,0 +1,15 @@
+{
+  "name": "mylisterhub",
+  "description": "MyListerHub's plugin for running an eBay store from Claude.",
+  "owner": {
+    "name": "MyListerHub",
+    "url": "https://www.mylisterhub.com"
+  },
+  "plugins": [
+    {
+      "name": "mylisterhub",
+      "source": "./",
+      "description": "Manage your eBay store through MyListerHub: listings, orders, buyer messages, new listings, order forms and description templates."
+    }
+  ]
+}

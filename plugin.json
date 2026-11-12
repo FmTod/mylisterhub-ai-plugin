@@ -1,0 +1,109 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mylisterhub",
+  "version": "1.0.0",
+  "description": "Manage your eBay store through MyListerHub: listings, orders, buyer messages, new listings, order forms and description templates.",
+  "author": {
+    "name": "MyListerHub",
+    "url": "https://www.mylisterhub.com"
+  },
+  "homepage": "https://www.mylisterhub.com/connect-ai-assistants",
+  "keywords": [
+    "ebay",
+    "listings",
+    "inventory",
+    "orders",
+    "ecommerce"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "MyListerHub",
+        "shortDescription": "Run your eBay store from chat",
+        "longDescription": "MyListerHub is an inventory and listing platform for eBay sellers. This plugin gives ChatGPT access to your MyListerHub account, so you can handle day-to-day selling work by asking for it in plain language.\n\nWhat you can do:\n- Listings: search your eBay listings by title or SKU, see which are out of stock, change price and quantity, and push revisions to eBay.\n- New listings: create a product, find the right eBay category and the item specifics it needs, run a check with eBay before going live, then list it.\n- Orders and sales: look up your open orders with their buyer, items and tracking, and get revenue and order counts by day, week or month.\n- Buyer messages: find the questions still waiting on a reply, read the thread, and answer the buyer.\n- Order forms and description templates: view, create, edit and preview the custom forms buyers fill in and the HTML templates your listings use.\n\nHow it works: you sign in with your MyListerHub account. ChatGPT only sees what your MyListerHub user is allowed to see, and every action runs in your account through MyListerHub's own eBay integration. Changes to eBay (prices, quantities, revisions, new listings, buyer replies) take effect right away, so ChatGPT is instructed to confirm the exact change with you before it makes one.\n\nRequires a MyListerHub account with an active subscription and a connected eBay account. Sign up at https://www.mylisterhub.com.",
+        "developerName": "MyListerHub",
+        "category": "Productivity",
+        "capabilities": [
+          "Search eBay listings",
+          "Update prices and quantities",
+          "List new items on eBay",
+          "Look up orders and sales",
+          "Reply to buyer messages",
+          "Edit order forms and description templates"
+        ],
+        "websiteURL": "https://www.mylisterhub.com",
+        "supportURL": "https://www.mylisterhub.com/support",
+        "privacyPolicyURL": "https://www.mylisterhub.com/privacy-policy",
+        "termsOfServiceURL": "https://www.mylisterhub.com/terms-of-service",
+        "defaultPrompt": [
+          "Which of my eBay listings are out of stock?",
+          "Show me buyer messages that still need a reply.",
+          "Summarize my sales for the last 7 days."
+        ],
+        "brandColor": "#3BADFF",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/logo.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Find out-of-stock listings",
+              "prompt": "Which of my eBay listings are out of stock?",
+              "tools_triggered": "list_listings",
+              "expected_behavior": "Names the \"Oil Filter 6-Pack for Chevrolet Silverado 5.3L 2014-2023\" listing, SKU RM-OF-4415, with 0 available."
+            },
+            {
+              "description": "Read and answer a buyer message",
+              "prompt": "Show me buyer messages I haven't answered yet, then tell the air filter buyer it fits a 2018 Camry 2.5L.",
+              "tools_triggered": "list_message_threads, get_message_thread, reply_to_message_thread",
+              "expected_behavior": "Lists two threads waiting on a reply: the air filter fit question and the brake pads tracking question. Shows the reply it plans to send, asks for confirmation, then sends it and reports \"Reply sent\"."
+            },
+            {
+              "description": "Check an order's tracking",
+              "prompt": "Has Marco Reyes's order shipped? What's the tracking number?",
+              "tools_triggered": "list_orders, get_order",
+              "expected_behavior": "Finds his order for the front ceramic brake pads and reports it shipped by USPS with tracking 9400111899223000000001."
+            },
+            {
+              "description": "Change a listing's price",
+              "prompt": "Drop the price of SKU RM-AF-1042 to $17.49.",
+              "tools_triggered": "list_listings, update_listing_price_quantity",
+              "expected_behavior": "Finds the engine air filter listing at $18.99, confirms the change to $17.49 with the user, applies it and reports the new price."
+            },
+            {
+              "description": "Summarize recent sales",
+              "prompt": "Summarize my sales for the last 7 days.",
+              "tools_triggered": "get_sales_summary",
+              "expected_behavior": "Returns daily revenue and order counts for the period and summarizes the totals."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unrelated request: the question has nothing to do with selling on eBay.",
+              "prompt": "What's a good chili recipe?",
+              "expected_behavior": "MyListerHub tools are not called; ChatGPT answers on its own."
+            },
+            {
+              "description": "Unsupported refund: there is no refund tool, and money moves only through eBay.",
+              "prompt": "Refund Marco Reyes for his brake pads.",
+              "expected_behavior": "No tool changes anything. ChatGPT says refunds are issued in eBay or the MyListerHub app and can offer to look up the order."
+            },
+            {
+              "description": "Missing ship-from location: eBay refuses a listing without one, and the user hasn't given it.",
+              "prompt": "List my rear brake pads on eBay.",
+              "expected_behavior": "ChatGPT finds the product (SKU RM-BP-3390) and asks for the city and ZIP it ships from before calling list_product_on_ebay."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "MyListerHub doesn't sell products or take payments in ChatGPT. It manages the seller's own eBay listings, and buyers purchase on eBay."
+      },
+      "publication": {
+        "release_notes": "Initial release: the MyListerHub MCP server (33 tools covering eBay listings, products and new listings, orders and sales, buyer messages, order forms and description templates) and four skills: get-started, daily-store-check, list-an-item and answer-buyers."
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md"
+    }
+  },
+  "repository": "https://github.com/FmTod/mylisterhub-ai-plugin"
+}

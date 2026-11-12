@@ -1,0 +1,19 @@
+{
+  "name": "mylisterhub",
+  "version": "1.0.0",
+  "description": "Manage your eBay store through MyListerHub: listings, orders, buyer messages, new listings, order forms and description templates.",
+  "author": {
+    "name": "MyListerHub",
+    "url": "https://www.mylisterhub.com"
+  },
+  "homepage": "https://www.mylisterhub.com/connect-ai-assistants",
+  "repository": "https://github.com/FmTod/mylisterhub-ai-plugin",
+  "keywords": [
+    "ebay",
+    "listings",
+    "inventory",
+    "orders",
+    "ecommerce"
+  ],
+  "privacyPolicyUrl": "https://www.mylisterhub.com/privacy-policy"
+}

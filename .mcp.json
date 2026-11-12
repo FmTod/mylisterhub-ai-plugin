@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mylisterhub": {
+      "type": "http",
+      "url": "https://app.mylisterhub.com/mcp"
+    }
+  }
+}
