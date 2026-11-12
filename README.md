@@ -1,23 +1,56 @@
+<div align="center">
+
+<img src="assets/logo.png" alt="MyListerHub" width="96" height="96">
+
 # MyListerHub for Claude and ChatGPT
 
-Run your eBay store from chat. This plugin connects Claude or ChatGPT to your [MyListerHub](https://www.mylisterhub.com) account through the MyListerHub MCP server, and adds skills for everyday selling work.
+**Run your eBay store just by asking.**
 
-You need a MyListerHub account with an active subscription and a connected eBay account. Setup help: https://www.mylisterhub.com/connect-ai-assistants
+Check stock, change prices, answer buyers and list new items from Claude or ChatGPT.
 
-## What's inside
+[![CI](https://github.com/FmTod/mylisterhub-ai-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/FmTod/mylisterhub-ai-plugin/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/FmTod/mylisterhub-ai-plugin?label=release&color=3BADFF)](https://github.com/FmTod/mylisterhub-ai-plugin/releases/latest)
+![Claude](https://img.shields.io/badge/Claude-plugin-D97757)
+![ChatGPT](https://img.shields.io/badge/ChatGPT-plugin-10A37F)
 
-| Skill | What it does |
-| --- | --- |
-| `get-started` | First-run tour: checks the connection and shows a store snapshot |
-| `daily-store-check` | Briefing on orders to ship, buyers waiting, sold-out listings and the last 7 days of sales |
-| `list-an-item` | Guided new eBay listing, from item details to a live listing |
-| `answer-buyers` | Drafts replies to unanswered buyer messages, sending each only after you approve it |
+[Setup guide](https://www.mylisterhub.com/connect-ai-assistants) · [Support](https://www.mylisterhub.com/support) · [Privacy](https://www.mylisterhub.com/privacy-policy) · [Terms](https://www.mylisterhub.com/terms-of-service)
 
-The MCP server (`https://app.mylisterhub.com/mcp`) does the work: you sign in with your MyListerHub account in the window that opens, and the assistant only sees what your MyListerHub user can. Changes to prices, quantities, listings and buyer replies go live on eBay right away, and the assistant is set up to ask before making one.
+<img src=".github/assets/chat.png" alt="Example conversation: the assistant finds an out-of-stock listing, proposes a restock and a price change, and updates eBay after the seller says yes" width="540">
+
+</div>
+
+## What you can do
+
+| | Skill | Try asking |
+| --- | --- | --- |
+| 👋 | **`get-started`**<br>First-run tour: checks the connection and shows a store snapshot | *"What can MyListerHub do?"* |
+| ☀️ | **`daily-store-check`**<br>Orders to ship, buyers waiting, sold-out listings and the last 7 days of sales | *"What needs my attention today?"* |
+| 🏷️ | **`list-an-item`**<br>From a description and photo links to a live eBay listing | *"List these brake pads. They ship from Austin, TX 78701."* |
+| 💬 | **`answer-buyers`**<br>Drafts a reply to each unanswered buyer message and sends it once you approve | *"Catch me up on buyer messages."* |
+
+Beyond the skills, you can ask for anything the MyListerHub tools cover: search listings by title or SKU, change prices and quantities, look up open orders and tracking, and edit your order forms and description templates.
+
+## How it works
+
+```mermaid
+flowchart LR
+    you([You]) -->|ask in plain English| ai[Claude or ChatGPT]
+    ai -->|checks the change with you| you
+    ai -->|MCP| mlh[MyListerHub]
+    mlh -->|updates| ebay[(eBay)]
+```
+
+- **You sign in with your MyListerHub account** in a window that opens from Claude or ChatGPT. There are no API keys to copy.
+- **The assistant sees only what your MyListerHub user can.** Team members each connect their own login.
+- **Changes go live on eBay right away.** Prices, quantities, listings and buyer replies take effect immediately, so the assistant is set up to show you the exact change and wait for your OK.
+- **Disconnect anytime** from your Claude or ChatGPT connector settings.
+
+You need a MyListerHub account with an active subscription and a connected eBay account.
 
 ## Install
 
-**Claude Code**
+<details open>
+<summary><b>Claude Code</b></summary>
 
 ```bash
 claude plugin marketplace add FmTod/mylisterhub-ai-plugin
@@ -26,11 +59,29 @@ claude plugin install mylisterhub@mylisterhub
 
 Then run `/mcp`, pick the MyListerHub server and choose **Authenticate**.
 
-**Claude (web, desktop)**: upload `dist/claude.zip` under **Customize → Plugins → Add → Upload plugin**, then connect MyListerHub from the plugin's **Connectors** tab. To use only the connector, follow the setup page above.
+</details>
 
-**ChatGPT**: install MyListerHub from the plugin directory once it's listed. Until then, follow the setup page above.
+<details>
+<summary><b>Claude on the web or desktop</b></summary>
 
-## Layout
+1. Download [`claude.zip`](https://github.com/FmTod/mylisterhub-ai-plugin/releases/latest/download/claude.zip) from the latest release.
+2. Upload it under **Customize → Plugins → Add → Upload plugin**.
+3. Connect MyListerHub from the plugin's **Connectors** tab.
+
+To add only the connector, without the skills, follow the [setup guide](https://www.mylisterhub.com/connect-ai-assistants).
+
+</details>
+
+<details>
+<summary><b>ChatGPT</b></summary>
+
+Install MyListerHub from the ChatGPT plugin directory once it's listed. Until then, follow the [setup guide](https://www.mylisterhub.com/connect-ai-assistants).
+
+</details>
+
+## Development
+
+### Layout
 
 One repo serves both vendors. The skills and icons are shared; each vendor reads its own manifest and MCP file.
 
@@ -42,18 +93,30 @@ One repo serves both vendors. The skills and icons are shared; each vendor reads
 | `skills/<name>/SKILL.md` | Both |
 | `assets/` | Directory icons |
 
-Keep `name` and `version` the same in both manifests, and the server URL the same in both MCP files.
+Keep `name` and `version` the same in both manifests, and the server URL the same in both MCP files. Skill frontmatter may only use `name`, `description` (up to 200 characters), `license`, `compatibility`, `metadata` and `allowed-tools`; claude.ai rejects any other key.
 
-## Build the upload ZIPs
+### Build
 
 ```bash
 python3 scripts/build.py
 ```
 
-It checks that the two manifests and MCP files agree and that every skill's frontmatter is accepted by claude.ai, then writes `dist/chatgpt.zip` and `dist/claude.zip`.
+It checks the rules above, then writes `dist/chatgpt.zip` and `dist/claude.zip`.
 
-## Releasing
+### CI
 
-Bump `version` in both manifests, build, and upload the new ZIP: ChatGPT under **platform.openai.com/plugins → Upload plugin to make changes**, Claude through the plugin upload above. Changes to the MCP server's tools reach ChatGPT through OpenAI's daily rescan and need no new ZIP.
+Every push and pull request runs [`ci.yml`](.github/workflows/ci.yml):
 
-The review test cases in `plugin.json` run against the reviewer account that the MyListerHub app's `mcp:create-review-tenant` command creates. When a tool is renamed or that sample data changes, update the test cases to match.
+- **Schemas:** `plugin.json` and `mcp.json` against the Agent Plugins schemas.
+- **Claude:** `claude plugin validate`.
+- **Build:** `scripts/build.py`, with both ZIPs uploaded as workflow artifacts.
+
+### Releasing
+
+Releases are cut by [release-please](https://github.com/googleapis/release-please) from [Conventional Commits](https://www.conventionalcommits.org): `feat:` bumps the minor version, `fix:` the patch.
+
+1. Merge to `main`. release-please opens or updates a release PR that bumps `version` in both manifests and the changelog.
+2. Merge the release PR. It tags the release, and the workflow attaches `chatgpt.zip` and `claude.zip`.
+3. Upload `chatgpt.zip` at **platform.openai.com/plugins → Upload plugin to make changes**.
+
+Changes to the MCP server's tools reach ChatGPT through OpenAI's daily rescan and need no new ZIP. The review test cases in `plugin.json` run against the reviewer account that the MyListerHub app's `mcp:create-review-tenant` command creates; when a tool is renamed or that sample data changes, update them to match.
