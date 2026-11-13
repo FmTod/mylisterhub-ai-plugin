@@ -27,6 +27,7 @@ Check stock, change prices, answer buyers and list new items from Claude or Chat
 | ☀️ | **`daily-store-check`**<br>Orders to ship, buyers waiting, sold-out listings and the last 7 days of sales | *"What needs my attention today?"* |
 | 🏷️ | **`list-an-item`**<br>From a description and photo links to a live eBay listing | *"List these brake pads. They ship from Austin, TX 78701."* |
 | 💬 | **`answer-buyers`**<br>Drafts a reply to each unanswered buyer message and sends it once you approve | *"Catch me up on buyer messages."* |
+| 🐞 | **`report-a-bug`**<br>Files a support ticket with the MyListerHub team when a tool fails or something looks broken, then gives you the ticket number | *"Listing this item keeps failing, report it."* |
 
 Beyond the skills, you can ask for anything the MyListerHub tools cover: search listings by title or SKU, change prices and quantities, look up open orders and tracking, and edit your order forms and description templates.
 
