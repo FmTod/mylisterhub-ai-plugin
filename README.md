@@ -84,15 +84,15 @@ Install MyListerHub from the ChatGPT plugin directory once it's listed. Until th
 
 ### Layout
 
-One repo serves both vendors. The skills and icons are shared; each vendor reads its own manifest and MCP file.
+One repo serves both vendors. The skills are shared; each vendor reads its own manifest and MCP file. The Claude plugin lives in `claude/` so the Claude plugin directory, pointed at that folder, scans only Claude's files and not the images or build script.
 
 | Path | Read by |
 | --- | --- |
 | `plugin.json`, `mcp.json` | ChatGPT and other [Agent Plugins](https://agent-plugins.org) clients. `plugin.json` also holds the ChatGPT listing, review test cases and release notes under `extensions.com.openai` |
-| `.claude-plugin/plugin.json`, `.mcp.json` | Claude |
+| `claude/.claude-plugin/plugin.json`, `claude/.mcp.json` | Claude |
 | `.claude-plugin/marketplace.json` | Claude Code's `plugin marketplace add` |
-| `skills/<name>/SKILL.md` | Both |
-| `assets/` | Directory icons |
+| `claude/skills/<name>/SKILL.md` | Both |
+| `assets/` | ChatGPT directory icons |
 
 Keep `name` and `version` the same in both manifests, and the server URL the same in both MCP files. Skill frontmatter may only use `name`, `description` (up to 200 characters), `license`, `compatibility`, `metadata` and `allowed-tools`; claude.ai rejects any other key.
 
@@ -109,7 +109,7 @@ It checks the rules above, then writes `dist/chatgpt.zip` and `dist/claude.zip`.
 Every push and pull request runs [`ci.yml`](.github/workflows/ci.yml):
 
 - **Schemas:** `plugin.json` and `mcp.json` against the Agent Plugins schemas.
-- **Claude:** `claude plugin validate`.
+- **Claude:** `claude plugin validate` on the marketplace and on `claude/`.
 - **Build:** `scripts/build.py`, with both ZIPs uploaded as workflow artifacts.
 
 ### Releasing

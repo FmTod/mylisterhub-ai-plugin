@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "mylisterhub",
-      "source": "./",
+      "source": "./claude",
       "description": "Manage your eBay store through MyListerHub: listings, orders, buyer messages, new listings, order forms and description templates."
     }
   ]
