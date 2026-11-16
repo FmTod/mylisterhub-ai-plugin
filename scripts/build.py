@@ -22,7 +22,7 @@ SKILL_KEYS = {"name", "description", "license", "compatibility", "metadata", "al
 
 BUNDLES = {
     "chatgpt.zip": ["plugin.json", "mcp.json", "assets", "claude/skills", "LICENSE"],
-    "claude.zip": ["claude/.claude-plugin/plugin.json", "claude/.mcp.json", "claude/skills", "LICENSE"],
+    "claude.zip": ["claude/.claude-plugin", "claude/.mcp.json", "claude/skills", "LICENSE"],
 }
 
 
