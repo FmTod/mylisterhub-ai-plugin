@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2](https://github.com/FmTod/mylisterhub-ai-plugin/compare/v1.1.1...v1.1.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* drop privacyPolicyUrl from the Claude manifest ([a0b4acb](https://github.com/FmTod/mylisterhub-ai-plugin/commit/a0b4acba5488b348053fc8ab0b50157339892736))
+* give the Claude plugin a listing icon ([d44db1d](https://github.com/FmTod/mylisterhub-ai-plugin/commit/d44db1d8f2394dc2f430219d70b9370b169e0c73))
+* move the Claude plugin into claude/ so the directory can auto-publish it ([#12](https://github.com/FmTod/mylisterhub-ai-plugin/issues/12)) ([9c690bb](https://github.com/FmTod/mylisterhub-ai-plugin/commit/9c690bbe722cde46e82b809093cdb0d0fdf8eec3))
+* restore privacyPolicyUrl in the Claude manifest ([bd044c9](https://github.com/FmTod/mylisterhub-ai-plugin/commit/bd044c9c5bee2af7babf7d71bd0c489c714ead00))
+
 ## [1.1.1](https://github.com/FmTod/mylisterhub-ai-plugin/compare/v1.1.0...v1.1.1) (2026-11-16)
 
 
