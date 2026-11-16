@@ -33,3 +33,10 @@ jobs:
         run: |
           python3 scripts/build.py
           gh release upload "${{ steps.release.outputs.tag_name }}" dist/chatgpt.zip dist/claude.zip --clobber
+
+      # The Claude plugin directory tracks this tag, so only released versions get published.
+      - if: steps.release.outputs.release_created
+        name: Move the claude-stable tag to the release
+        run: |
+          git tag -f claude-stable "${{ steps.release.outputs.sha }}"
+          git push -f origin refs/tags/claude-stable
