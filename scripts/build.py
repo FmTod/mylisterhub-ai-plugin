@@ -17,7 +17,7 @@ DIST = ROOT / "dist"
 # claude.ai rejects skill uploads with any other frontmatter key.
 SKILL_KEYS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 
-SHARED = ["skills", "assets"]
+SHARED = ["skills", "assets", "LICENSE"]
 BUNDLES = {
     "chatgpt.zip": ["plugin.json", "mcp.json", *SHARED],
     "claude.zip": [".claude-plugin/plugin.json", ".mcp.json", *SHARED],
