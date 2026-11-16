@@ -3,6 +3,9 @@
 dist/chatgpt.zip: Agent Plugins package for the ChatGPT plugin directory.
 dist/claude.zip:  Claude plugin for claude.ai (Customize > Plugins > Upload plugin).
 
+The Claude plugin lives in claude/ so the Claude plugin directory scans only its files;
+both ZIPs drop the claude/ prefix.
+
 Run from the repo root: python3 scripts/build.py
 """
 
@@ -17,24 +20,23 @@ DIST = ROOT / "dist"
 # claude.ai rejects skill uploads with any other frontmatter key.
 SKILL_KEYS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 
-SHARED = ["skills", "assets", "LICENSE"]
 BUNDLES = {
-    "chatgpt.zip": ["plugin.json", "mcp.json", *SHARED],
-    "claude.zip": [".claude-plugin/plugin.json", ".mcp.json", *SHARED],
+    "chatgpt.zip": ["plugin.json", "mcp.json", "assets", "claude/skills", "LICENSE"],
+    "claude.zip": ["claude/.claude-plugin/plugin.json", "claude/.mcp.json", "claude/skills", "LICENSE"],
 }
 
 
 def check() -> None:
     portable = json.loads((ROOT / "plugin.json").read_text())
-    claude = json.loads((ROOT / ".claude-plugin/plugin.json").read_text())
+    claude = json.loads((ROOT / "claude/.claude-plugin/plugin.json").read_text())
     for key in ("name", "version"):
         assert portable[key] == claude[key], f"{key} differs between plugin.json and .claude-plugin/plugin.json"
 
     portable_url = json.loads((ROOT / "mcp.json").read_text())["mcpServers"]["mylisterhub"]["url"]
-    claude_url = json.loads((ROOT / ".mcp.json").read_text())["mcpServers"]["mylisterhub"]["url"]
+    claude_url = json.loads((ROOT / "claude/.mcp.json").read_text())["mcpServers"]["mylisterhub"]["url"]
     assert portable_url == claude_url, "MCP server URL differs between mcp.json and .mcp.json"
 
-    for skill in sorted((ROOT / "skills").glob("*/SKILL.md")):
+    for skill in sorted((ROOT / "claude/skills").glob("*/SKILL.md")):
         match = re.match(r"---\n(.*?)\n---\n", skill.read_text(), re.S)
         assert match, f"{skill}: missing frontmatter"
         fields = dict(line.split(": ", 1) for line in match.group(1).splitlines())
@@ -52,7 +54,7 @@ def build() -> None:
                 files = sorted(source.rglob("*")) if source.is_dir() else [source]
                 for file in files:
                     if file.is_file():
-                        archive.write(file, file.relative_to(ROOT).as_posix())
+                        archive.write(file, file.relative_to(ROOT).as_posix().removeprefix("claude/"))
         print(f"dist/{name}")
 
 

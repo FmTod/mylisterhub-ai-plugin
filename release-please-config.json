@@ -6,7 +6,7 @@
       "release-type": "simple",
       "extra-files": [
         { "type": "json", "path": "plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" }
+        { "type": "json", "path": "claude/.claude-plugin/plugin.json", "jsonpath": "$.version" }
       ]
     }
   }
